@@ -17,11 +17,9 @@ http://wiki.ros.org/noetic
 
 # The Robot
 
-The robot consists of two boards. To control it from ROS, the original firmware for the motor board will work. For the control board a *rosserial_arduino* client should run for publishing and subscribing of ROS topics. The USB connector from the control board forms the serial interface and can, for instance, be connected to a single board computer carried by the robot.
+The robot consists of two boards. To control it from ROS, the original firmware for the motor board will work. For the control board a *rosserial_arduino* client should run for publishing and subscribing of ROS topics. The USB connector from the control board forms the serial interface and it can, for instance, be connected to a single board computer carried by the robot.
 
-Unfortunately, the standard Robot Control library uses too much resources to leave enough free memory space to run a *rosserial_arduino* client.
-
-A stripped down version of the Robot Control Library can be found here: https://github.com/MartinStokroos/Robot_Control_Lite
+Unfortunately, the standard Robot Control library uses too much resources to leave enough free memory space to run a *rosserial_arduino* client. A stripped down version of the Robot Control library can be found here: https://github.com/MartinStokroos/Robot_Control_Lite
 
 # ROS lib for Arduino
 
