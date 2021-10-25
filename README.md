@@ -25,13 +25,13 @@ Unfortunately, the standard Robot Control library uses too much resources to lea
 
 The ROS library for Arduino can be installed via the Arduino IDE library manager, or the library can be generated with a Python script from the *ros-noetic-rosserial-arduino* package. Modify *ros.h* by adding support for the Atmega32u4 MCU.
 
-Add under "namespace ros":
+Add under `namespace ros`:
 
 ````
 ```
 #elif defined(__AVR_ATmega32U4__)
 
-  typedef NodeHandle_<ArduinoHardware, 2, 2, 150, 150> NodeHandle;
+  typedef NodeHandle_<ArduinoHardware, 5, 2, 150, 150> NodeHandle;
 
 ```
 ````
@@ -42,21 +42,59 @@ The NodeHandle arguments are: *number of publishers, number of subscribers, inpu
 
 - Robot_Control_ROS.ino
 
- Current topics:
+  
 
-* cmd_vel
-
-  (raw PWM values. No calibration yet..)
-
-* msg_compass
-
-  (compass heading 0...360 degrees)
-
+Currently supported topics | publisher/subscriber | message type | function
+---------------|----------------------|-----------|---------
+*cmd_vel* | sub | `twist` | Linear and radial velocity as raw PWM values (float) 
+*msg_compass* |pub | `Int16` |Compass heading 0...360 degrees (int16)
+*msg_irarray* |pub |`Adc`|5 element array of uint16 for IR sensors
 
 
 This work is under development...
 
 
 
+# Testing
 
+Start the serial node (using direct USB cable connection to a Linux system):
+
+`rosrun rosserial_python serial_node.py /dev/ttyACM0`
+
+
+
+Check for available topics:
+
+`rostopic list`
+
+
+
+Check the data rate:
+
+`rostopic hz /msg_compass`
+
+
+
+Echo the compass heading:
+
+`rostopic echo msg_compass`
+
+
+
+Plot IR array sensor response:
+
+`rqt_plot msg_irarray`
+
+
+
+Drive the motors straight forward:
+
+ `rostopic pub -r 10 /cmd_vel geometry_msgs/Twist "linear:
+  x: 75.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0" `
 
