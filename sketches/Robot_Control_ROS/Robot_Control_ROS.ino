@@ -22,6 +22,11 @@
   analogRead();
   IMU (via the motor board I2C ?)
 
+  For direct write to timer OC registers for PWM generation:
+  OCR1A = PWM A for the left wheel, OCR1B = PWM B left wheel
+  OCR3A = PMA A for the right wheel, OCR4D = PWM B right wheel
+
+  **
 
   MIT License
 
@@ -53,7 +58,7 @@
 #include <ros.h>
 #include <rosserial_arduino/Adc.h>
 #include <std_msgs/Int16.h>
-//#include <std_msgs/Float32.h>
+#include <std_msgs/Float32.h>
 #include <geometry_msgs/Twist.h>
 
 #define LOOP_TIME 50000  // loop time in us. 50ms = 20Hz
@@ -65,14 +70,20 @@ int cmdVelRight = 0;
 
 ros::NodeHandle nh; //instantiate the node handle for ROS
 
-void cmdVel_CallBack( const geometry_msgs::Twist& twist) {
-  //setVelLeft = (double)twist.linear.x; //testing
-  cmdVelLeft = round( (double)twist.linear.x - (double)twist.angular.z * L_BASE );
-  //setVelRight = (double)twist.linear.x; //testing
-  cmdVelRight = round( (double)twist.linear.x + (double)twist.angular.z * L_BASE );
+void cmdVelCallBack(const geometry_msgs::Twist& twist) {
+  cmdVelLeft = round( (double)twist.linear.x ); //testing
+  //cmdVelLeft = round( (double)twist.linear.x - (double)twist.angular.z * L_BASE );
+  cmdVelRight = round( (double)twist.linear.x ); //testing
+  //cmdVelRight = round( (double)twist.linear.x + (double)twist.angular.z * L_BASE );
+
+  if(cmdVelLeft > 255) { cmdVelLeft = 255; }
+  else if (cmdVelLeft < -255) { cmdVelLeft = -255; }
+
+  if(cmdVelRight > 255) { cmdVelRight = 255; }
+  else if (cmdVelRight <-255) { cmdVelRight = -255; }
 }
 
-ros::Subscriber<geometry_msgs::Twist> subCmdVel("cmd_vel", cmdVel_CallBack);
+ros::Subscriber<geometry_msgs::Twist> subCmdVel("cmd_vel", cmdVelCallBack);
 
 std_msgs::Int16 heading_msg;
 ros::Publisher pubCompassHeading("msg_compass", &heading_msg);

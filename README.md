@@ -31,7 +31,7 @@ Add under `namespace ros`:
 ```
 #elif defined(__AVR_ATmega32U4__)
 
-  typedef NodeHandle_<ArduinoHardware, 5, 2, 150, 150> NodeHandle;
+  typedef NodeHandle_<ArduinoHardware, 5, 3, 150, 150> NodeHandle;
 
 ```
 ````
@@ -89,7 +89,7 @@ Plot IR array sensor response:
 
 Drive the motors straight forward:
 
- `rostopic pub -r 10 /cmd_vel geometry_msgs/Twist "linear:
+ `rostopic pub -r 1 /cmd_vel geometry_msgs/Twist "linear:
   x: 75.0
   y: 0.0
   z: 0.0
